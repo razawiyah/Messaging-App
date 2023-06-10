@@ -21,64 +21,77 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
 
     EditText emailET,passET;
     Button loginBtn;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser fUser;
+    String id;
     TextView signUpLink,resetLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
 
-        emailET = findViewById(R.id.emailET);
-        passET = findViewById(R.id.passET);
-        loginBtn = findViewById(R.id.loginBtn);
-        signUpLink = findViewById(R.id.signUpLink);
-        resetLink = findViewById(R.id.resetLink);
+        fUser = mAuth.getCurrentUser();
 
-        signUpLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Login.this, Register.class));
-                finish();
-            }
-        });
-        resetLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showForgotPasswordDialog();
-            }
-        });
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = emailET.getText().toString();
-                String pass = passET.getText().toString();
+        if (fUser != null) {
+            startActivity(new Intent(Login.this, MainActivity.class));
+            finish();
 
-                if (email.isEmpty() || pass.isEmpty()) {
-                    errorPopup();
-                } else {
-                    mAuth.signInWithEmailAndPassword(email,pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                        @Override
-                        public void onSuccess(AuthResult authResult) {
-                            startActivity(new Intent(Login.this, MainActivity.class));
-                            finish();
+            Toast.makeText(Login.this, "Welcome Back!", Toast.LENGTH_SHORT).show();
+        }else {
+            setContentView(R.layout.activity_login);
 
-                            Toast.makeText(Login.this, "Welcome Back!", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            errorPopup();
-                        }
-                    });
+            emailET = findViewById(R.id.emailET);
+            passET = findViewById(R.id.passET);
+            loginBtn = findViewById(R.id.loginBtn);
+            signUpLink = findViewById(R.id.signUpLink);
+            resetLink = findViewById(R.id.resetLink);
+
+            signUpLink.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(Login.this, Register.class));
+                    finish();
                 }
-            }
-        });
+            });
+            resetLink.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showForgotPasswordDialog();
+                }
+            });
+            loginBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String email = emailET.getText().toString();
+                    String pass = passET.getText().toString();
+
+                    if (email.isEmpty() || pass.isEmpty()) {
+                        errorPopup();
+                    } else {
+                        mAuth.signInWithEmailAndPassword(email,pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                            @Override
+                            public void onSuccess(AuthResult authResult) {
+                                startActivity(new Intent(Login.this, MainActivity.class));
+                                finish();
+
+                                Toast.makeText(Login.this, "Welcome Back!", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                errorPopup();
+                            }
+                        });
+                    }
+                }
+            });
+        }
     }
 
     private void errorPopup() {

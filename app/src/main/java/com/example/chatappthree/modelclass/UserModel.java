@@ -1,15 +1,24 @@
 package com.example.chatappthree.modelclass;
 
 public class UserModel {
-    String name,email,password;
+    String name,email,password,imageUrl;
 
     public UserModel() {
     }
 
-    public UserModel(String name, String email, String password) {
+    public UserModel(String name, String email, String password, String imageUrl) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.imageUrl = imageUrl;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {
