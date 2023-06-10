@@ -13,6 +13,12 @@ public class UserModel {
         this.imageUrl = imageUrl;
     }
 
+    public UserModel(String name, String email, String imageUrl) {
+        this.name = name;
+        this.email = email;
+        this.imageUrl = imageUrl;
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }
