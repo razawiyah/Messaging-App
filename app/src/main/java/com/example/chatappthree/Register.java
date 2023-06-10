@@ -66,7 +66,7 @@ public class Register extends AppCompatActivity {
                             fUser = mAuth.getCurrentUser();
                             id = fUser.getUid();
                             //add UserModel to DB
-                            UserModel user = new UserModel(name, email, pass,"default");
+                            UserModel user = new UserModel(name, email, pass,"default",id);
                             databaseReference.child(id).setValue(user);
                             mAuth.signOut();
                             showPopup();
