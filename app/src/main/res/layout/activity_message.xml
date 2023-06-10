@@ -11,6 +11,7 @@
         android:id="@+id/bar_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/bottom"
         android:orientation="vertical">
 
         <include
@@ -19,14 +20,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/light_purple"
+            android:id="@+id/recycler_view"
+            android:layout_below="@+id/bar_layout"/>
+
+
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/recycler_view"
-        android:layout_below="@+id/bar_layout"
-        android:layout_above="@+id/bottom"/>
 
 
     <RelativeLayout
