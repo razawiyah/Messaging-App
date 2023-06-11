@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import com.example.chatappthree.Adapter.UserAdapter;
 import com.example.chatappthree.R;
 import com.example.chatappthree.modelclass.ChatModel;
+import com.example.chatappthree.modelclass.Chatlist;
 import com.example.chatappthree.modelclass.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,7 +39,7 @@ public class ChatsFragment extends Fragment {
     FirebaseUser fUser;
     String id;
 
-    List<String> usersList;
+    List<Chatlist> usersList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,8 +56,7 @@ public class ChatsFragment extends Fragment {
 
         usersList = new ArrayList<>();
 
-        Query query = databaseReference.child("Chats");
-
+        /*Query query = databaseReference.child("Chats");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -79,12 +80,31 @@ public class ChatsFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+        });*/
+
+        Query query = databaseReference.child("ChatList").child(id);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                usersList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Chatlist chatlist = dataSnapshot.getValue(Chatlist.class);
+                    usersList.add(chatlist);
+                }
+                chatList();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
         });
 
         return view;
     }
 
-    private void readChats() {
+    /*private void readChats() {
         mUsers = new ArrayList<>();
 
         Query queryUser = databaseReference.child("User");
@@ -125,6 +145,52 @@ public class ChatsFragment extends Fragment {
 
             }
         });
-    }
+    }*/
 
+    private void chatList() {
+        mUsers = new ArrayList<>();
+        Query query2 = databaseReference.child("User");
+        query2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mUsers.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    UserModel user = dataSnapshot.getValue(UserModel.class);
+                    for (Chatlist chatlist : usersList) {
+                        if (user.getId().equals(chatlist.getId())) {
+//                            mUsers.add(user);
+                            boolean alreadyExists = false;
+
+                            for (UserModel existingUser : mUsers) {
+                                if (existingUser.getId().equals(user.getId())) {
+                                    alreadyExists = true;
+                                    break;
+                                }
+                            }
+
+                            if (!alreadyExists) {
+                                mUsers.add(user);
+                                break; // Once the user is added, exit the inner loop
+                            }
+                        }
+                    }
+                }
+//                userAdapter = new UserAdapter(getContext(), mUsers, true);
+//                recyclerView.setAdapter(userAdapter);
+
+                if (mUsers.size() > 0) {
+                    userAdapter = new UserAdapter(getContext(), mUsers, true);
+                    recyclerView.setAdapter(userAdapter);
+                } else {
+                    // Handle the case when there are no users to display
+                    Log.d("Tag", "Recycler view error adaa");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }

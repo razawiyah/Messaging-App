@@ -138,6 +138,22 @@ public class MessageActivity extends AppCompatActivity {
         hashMap.put("message",message);
 
         databaseReference.child("Chats").push().setValue(hashMap);
+
+        //add user to chat fragment
+        Query queryChatList = databaseReference.child("ChatList").child(id).child(userId);
+        queryChatList.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!snapshot.exists()){
+                    databaseReference.child("ChatList").child(id).child(userId).child("id").setValue(userId);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void errorPopup() {
