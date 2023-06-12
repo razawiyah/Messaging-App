@@ -30,8 +30,6 @@
 
     </LinearLayout>
 
-
-
     <RelativeLayout
         android:id="@+id/bottom"
         android:layout_width="match_parent"
